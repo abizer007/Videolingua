@@ -1,0 +1,99 @@
+flowchart TB
+  subgraph FE["Package: NEW_Frontend"]
+    Upload["upload page"]
+    PipelineUI["pipeline/results pages"]
+    ArchitectureUI["architecture/backends/evidence pages"]
+  end
+
+  subgraph API["Package: backend"]
+    FastAPI["main.py FastAPI routes"]
+    JobStore["job_store.py"]
+    Manifest["job_manifest.py"]
+    Runner["pipeline_runner.py"]
+  end
+
+  subgraph ASR["Package: asr"]
+    ASRRun["run_asr.py"]
+    ASRSpeaker["speaker_analysis.py"]
+  end
+
+  subgraph TR["Package: translation"]
+    TRRun["run_translate.py"]
+    TRRouter["router.py"]
+    TREngines["engines/*"]
+    TRValidation["validation/*"]
+    TRCache["cache/*"]
+  end
+
+  subgraph Voice["Package: voice / tts"]
+    TTSRun["tts/run_tts.py"]
+    VoiceRouter["voice/router.py"]
+    VoiceEngines["voice/engines/*"]
+    AudioValidation["audio_validation.py"]
+    Phonetic["phonetic_resolution.py"]
+  end
+
+  subgraph Workers["Package: workers"]
+    IT2Worker["indictrans2_worker.py"]
+    XTTSWorker["xtts_worker.py"]
+    F5Worker["indicf5_worker.py disabled"]
+    HubertWorker["hubert_prosody_worker.py"]
+  end
+
+  subgraph Prosody["Package: prosody"]
+    ProsodyAnalysis["voice/prosody_analysis.py"]
+    ProsodyTransfer["voice/prosody_transfer.py"]
+    Hubert["voice/hubert_prosody.py"]
+    Adapter["prosody/adapter_*"]
+  end
+
+  subgraph Speaker["Package: speaker_analysis"]
+    Diarization["diarization.py"]
+    Mapping["speaker_mapping.py"]
+    VoicePlan["sarvam_voice_selection.py"]
+  end
+
+  subgraph Eval["Package: evaluation"]
+    MetricsReport["report_builder.py"]
+    MediaMetrics["media/audio metrics"]
+  end
+
+  subgraph Compliance["Package: compliance"]
+    Passport["compliance_passport.py"]
+    Provenance["provenance/fingerprint/audit"]
+  end
+
+  subgraph Export["Package: tools"]
+    MultiExport["create_multilingual_export.py"]
+  end
+
+  ArtifactStore["Artifact store: jobs/* and outputs/*"]
+
+  FE --> FastAPI
+  FastAPI --> JobStore
+  FastAPI --> Runner
+  Runner --> Manifest
+  Runner --> ASRRun
+  Runner --> Speaker
+  Runner --> TRRun
+  TRRun --> TRRouter
+  TRRouter --> TREngines
+  TREngines --> IT2Worker
+  TRRun --> TRValidation
+  TRValidation --> TRCache
+  Runner --> Prosody
+  Hubert --> HubertWorker
+  Runner --> TTSRun
+  TTSRun --> VoiceRouter
+  VoiceRouter --> VoiceEngines
+  VoiceEngines --> F5Worker
+  Voice --> AudioValidation
+  Voice --> Phonetic
+  Runner --> Eval
+  Runner --> Compliance
+  FastAPI --> MultiExport
+  Runner --> ArtifactStore
+  Eval --> ArtifactStore
+  Compliance --> ArtifactStore
+  MultiExport --> ArtifactStore
+

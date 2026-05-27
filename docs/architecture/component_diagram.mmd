@@ -1,0 +1,32 @@
+flowchart LR
+  Frontend["Next.js frontend\nNEW_Frontend"] -->|POST /api/upload| FastAPI["FastAPI backend\nbackend/main.py"]
+  Frontend -->|poll /api/job-status\nGET /api/result| FastAPI
+  FastAPI --> JobStore["job_store\nin-memory status"]
+  FastAPI --> Runner["pipeline_runner\nsubprocess orchestrator"]
+  Runner --> Manifest["job_manifest\njob_manifest.json"]
+  Runner --> ASR["ASR stage\nasr/run_asr.py"]
+  ASR --> Speaker["Speaker analysis\nspeaker_analysis/report.py"]
+  Runner --> Translation["translation/run_translate.py"]
+  Translation --> TRouter["translation router"]
+  TRouter --> IT2Engine["IndicTrans2Engine"]
+  IT2Engine --> IT2Worker[".venv_indictrans2\nworkers/indictrans2_worker.py"]
+  Translation --> QA["Translation QA\nlinguistic integrity"]
+  Runner --> Prosody["Prosody/HuBERT layer"]
+  Prosody --> HubertWorker[".venv_prosody\nhubert_prosody_worker.py"]
+  Runner --> TTS["tts/run_tts.py"]
+  TTS --> VRouter["voice router"]
+  VRouter --> XTTS["XTTS engine\n.venv_tts"]
+  VRouter --> Sarvam["SarvamEngine\nbackend API key only"]
+  VRouter -. disabled .-> IndicF5["IndicF5 engine\nlocal_disabled"]
+  TTS --> AudioVal["audio validation"]
+  Runner --> Mux["lip-sync / ffmpeg mux"]
+  Runner --> Metrics["evaluation/report_builder.py"]
+  Runner --> Compliance["compliance passport\nprovenance sidecars"]
+  FastAPI --> ExportAPI["/api/multilingual-export"]
+  ExportAPI --> ExportTool["tools/create_multilingual_export.py"]
+  Manifest --> Outputs["jobs/* / outputs/*\nartifacts and reports"]
+  Mux --> Outputs
+  Metrics --> Outputs
+  Compliance --> Outputs
+  ExportTool --> Outputs
+

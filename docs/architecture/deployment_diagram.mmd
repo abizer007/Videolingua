@@ -1,0 +1,48 @@
+flowchart TB
+  subgraph Machine["Local Windows machine: D:\\Vidiolingua"]
+    subgraph FrontendNode["Node.js / pnpm runtime"]
+      Next["Next.js NEW_Frontend"]
+    end
+    subgraph ApiNode[".venv_api"]
+      API["FastAPI + pipeline_runner"]
+    end
+    subgraph AsrNode[".venv_asr"]
+      ASR["WhisperX / faster-whisper / PyAnnote"]
+    end
+    subgraph TtsNode[".venv_tts protected"]
+      XTTS["Coqui XTTS stack\nTTS 0.22.0 torch CPU"]
+    end
+    subgraph It2Node[".venv_indictrans2"]
+      IT2["IndicTrans2 worker\ntorch cu121 CUDA fp16"]
+    end
+    subgraph F5Node[".venv_indicf5 quarantined"]
+      F5["IndicF5 worker\nlocal_disabled"]
+    end
+    subgraph ProsodyNode[".venv_prosody"]
+      HUBERT["HuBERT worker\ntorch CPU"]
+    end
+    Models["models/*\nmodels/xtts_v2 protected\nmodels/indictrans2/*\nmodels/indicf5/* experimental"]
+    Outputs["jobs/* and outputs/*\nprotected proof outputs"]
+    Cache[".hf_cache / workspace caches"]
+  end
+
+  GPU["NVIDIA GeForce RTX 4050 Laptop GPU"] --> IT2
+  GPU -. available but disabled for production .-> F5
+  XTTS -. current verified state: CPU only .-> GPU
+  HUBERT -. current verified state: CPU only .-> GPU
+
+  HF["External Hugging Face model access/cache"] --> Cache
+  Sarvam["External Sarvam API\nbackend-only key"] --> API
+  Ollama["Optional Ollama localhost\nexplicit fallback/post-edit only"] -. optional .-> API
+
+  Next --> API
+  API --> ASR
+  API --> XTTS
+  API --> IT2
+  API -. disabled unless approved .-> F5
+  API --> HUBERT
+  API --> Outputs
+  XTTS --> Models
+  IT2 --> Models
+  F5 --> Models
+

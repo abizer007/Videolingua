@@ -1,0 +1,26 @@
+sequenceDiagram
+  autonumber
+  participant Runner as pipeline_runner
+  participant Stage as translation/run_translate.py
+  participant Router as translation/router.py
+  participant Engine as IndicTrans2Engine
+  participant Py as .venv_indictrans2 python
+  participant Worker as workers/indictrans2_worker.py
+  participant Model as local/HF IndicTrans2 model
+
+  Runner->>Stage: subprocess with translation input/output dirs
+  Stage->>Router: select_translation_engine(request)
+  Router-->>Stage: indictrans2 for supported Indic pair
+  Stage->>Engine: translate(request)
+  Engine->>Engine: write request.json in workspace temp
+  Engine->>Py: python -m workers.indictrans2_worker --request --response
+  Py->>Worker: execute worker in isolated runtime
+  Worker->>Model: load tokenizer/model with trust_remote_code
+  Worker->>Model: generate translation, CUDA fp16 if available
+  Model-->>Worker: decoded text
+  Worker->>Worker: write response.json, clear CUDA cache
+  Worker-->>Engine: process exit 0
+  Engine->>Engine: read response.json
+  Engine-->>Stage: TranslationResult(fallback_used=false)
+  Stage-->>Runner: translated JSON and QA reports
+

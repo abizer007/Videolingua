@@ -1,0 +1,46 @@
+sequenceDiagram
+  autonumber
+  participant UI as NEW_Frontend
+  participant API as FastAPI /api/upload
+  participant Store as job_store
+  participant Runner as pipeline_runner
+  participant Manifest as job_manifest
+  participant ASR as ASR stage
+  participant Speaker as speaker_analysis
+  participant TR as translation router
+  participant IT2 as IndicTrans2 worker
+  participant QA as QA/integrity layers
+  participant Prosody as prosody/HuBERT
+  participant Voice as TTS voice router
+  participant TTS as XTTS or Sarvam
+  participant Media as audio validation + mux
+  participant Eval as evaluation/compliance/export artifacts
+
+  UI->>API: POST video, languages, voiceOptions, consent
+  API->>Store: create_job(jobId)
+  API->>Runner: run_pipeline_background(jobId)
+  UI->>API: poll /api/job-status/{jobId}
+  Runner->>Manifest: create_manifest + receive_upload
+  Runner->>ASR: subprocess asr/run_asr.py
+  ASR-->>Runner: ASR JSON with segments/language/diarization metadata
+  Runner->>Speaker: optional speaker analysis report stage
+  Speaker-->>Runner: speaker reports / voice assignment plan
+  Runner->>Prosody: source prosody profile + optional HuBERT features
+  Runner->>TR: subprocess translation/run_translate.py
+  TR->>IT2: for supported Indic pairs via request JSON
+  IT2-->>TR: response JSON translation
+  TR->>QA: translation QA + linguistic integrity reports
+  TR-->>Runner: translation JSON and reports
+  Runner->>Prosody: TTS prosody plan over translation payload
+  Runner->>Voice: subprocess tts/run_tts.py
+  Voice->>TTS: select XTTS or Sarvam; IndicF5 remains disabled unless explicitly enabled
+  TTS-->>Voice: timed WAV segments and final WAV
+  Voice-->>Runner: TTS WAV + phonetic report
+  Runner->>Media: audio validation, lip-sync or ffmpeg mux
+  Media-->>Runner: final MP4
+  Runner->>Eval: metrics report + compliance/provenance bundle
+  Eval-->>Manifest: artifact registrations
+  Runner->>Store: result payload with manifestSummary
+  UI->>API: GET /api/result/{jobId}
+  API-->>UI: localizedVideos, metricsReport, QA/prosody/compliance summaries
+

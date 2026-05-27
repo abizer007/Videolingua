@@ -1,0 +1,32 @@
+# IndicF5 runtime. Install in .venv_indicf5, not in the known-good .venv_tts.
+#
+# The model is gated on Hugging Face:
+# 1. Accept terms for https://huggingface.co/ai4bharat/IndicF5
+# 2. Set HUGGINGFACE_TOKEN in backend/.env
+
+deep-translator>=1.11.0
+gTTS>=2.4.0
+requests>=2.23.0
+numpy>=1.24.0
+torch>=2.0.0
+torchaudio>=2.0.0
+transformers>=4.41.0
+accelerate>=0.30.0
+huggingface-hub>=0.23.0
+soundfile>=0.12.1
+scipy>=1.10.0
+cached_path>=1.8.10
+datasets>=4.8.4
+ema_pytorch>=0.7.0
+hydra-core>=1.3.0
+vocos>=0.1.0
+torchdiffeq>=0.2.5
+transformers_stream_generator>=0.0.5
+wandb>=0.26.0
+x_transformers>=2.18.0
+jieba>=0.42.1
+pypinyin>=0.55.0
+tomli>=2.0.0
+
+# Install the IndicF5 package itself without dependencies after this file:
+# python -m pip install git+https://github.com/ai4bharat/IndicF5.git --no-deps

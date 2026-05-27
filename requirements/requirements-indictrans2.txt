@@ -1,0 +1,17 @@
+# IndicTrans2 isolated environment requirements.
+# Install only into D:\Vidiolingua\.venv_indictrans2.
+# Install torch separately first, using the approved CUDA or CPU index command.
+
+transformers==4.51.3
+accelerate>=0.30.0
+safetensors>=0.4.5
+sentencepiece>=0.2.0
+sacremoses>=0.1.1
+mosestokenizer>=1.2.1
+nltk>=3.8.1
+indic-nlp-library>=0.92
+indictranstoolkit==1.1.1
+huggingface_hub[cli]>=0.24.0
+pandas>=2.2.0
+regex>=2024.5.15
+numpy>=2.1.0,<2.3.0

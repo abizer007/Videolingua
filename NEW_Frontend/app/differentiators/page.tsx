@@ -1,0 +1,624 @@
+import Link from "next/link";
+import { AlertTriangle, ArrowRight, BadgeCheck, BookOpen, BrainCircuit, CheckCircle2, ClipboardCheck, Cpu, Database, FileJson, Fingerprint, Gauge, IdCard, Layers3, RadioTower, Route, ShieldCheck, SlidersHorizontal, TimerReset, Waves } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { SiteFooter } from "@/components/vidiolingua/site-footer";
+import { SiteNavigation } from "@/components/vidiolingua/site-navigation";
+
+const differentiators = [
+  { title: "Responsible AI & Provenance Engine", status: "Implemented", body: "Every generated dub can carry consent records, synthetic-media risk classification, provenance manifests, fingerprints, audit logs, and a compliance passport.", icon: ClipboardCheck, href: "#responsible-ai-provenance" },
+  { title: "HuBERT-guided Prosody & Elocution Engine", status: "Implemented", body: "Source rhythm, pauses, energy, pacing guidance, HuBERT features, and a lightweight adapter report.", icon: Waves },
+  { title: "Job manifest orchestration", status: "Implemented", body: "Each stage writes recoverable evidence into job_manifest.json.", icon: FileJson },
+  { title: "Multilingual / OTT export", status: "Implemented", body: "Protected French and Kannada tracks can be packaged without rerunning models.", icon: RadioTower },
+  { title: "Translation QA and context integrity", status: "Implemented", body: "Glossary, entities, numbers, script checks, expansion, and neighboring context checks.", icon: ShieldCheck },
+  { title: "Linguistic and phonetic integrity", status: "Implemented", body: "Canonical text stays separate from TTS-prepared pronunciation hints.", icon: BadgeCheck },
+  { title: "Automatic evaluation metrics", status: "Implemented", body: "Artifact-backed quality reports expose what was measured and what still needs references.", icon: Gauge },
+  { title: "Resume/retry execution", status: "Implemented", body: "Stage-level retry and resumable worker execution.", icon: TimerReset },
+];
+
+const hubertEvidence = [
+  {
+    title: "HuBERT Feature Extractor",
+    icon: Cpu,
+    rows: [
+      ["Model", "facebook/hubert-base-ls960"],
+      ["Embedding dimension", "768"],
+      ["Device", "CPU"],
+      ["Status", "computed"],
+    ],
+    explanation: "Pretrained HuBERT was used as a frozen speech feature extractor. HuBERT itself was not trained from scratch.",
+  },
+  {
+    title: "Adapter Training",
+    icon: SlidersHorizontal,
+    rows: [
+      ["Model type", "ridge"],
+      ["Training examples", "2"],
+      ["Attempted jobs", "2"],
+      ["Confidence", "low"],
+    ],
+    explanation: "A lightweight adapter/calibrator was trained on project artifacts. Because the dataset is small, confidence may be low.",
+  },
+  {
+    title: "Kannada Validation / Prosody Similarity",
+    icon: Waves,
+    rows: [
+      ["Status", "computed"],
+      ["Prosody similarity", "88.865 / 100"],
+      ["Embedding cosine", "0.917243"],
+      ["Confidence", "low"],
+    ],
+    explanation: "This is HuBERT-guided prosody similarity, not perfect emotion transfer. The validation report currently has no warnings.",
+  },
+  {
+    title: "Confusion Matrix / Evaluation Matrix",
+    icon: Gauge,
+    rows: [
+      ["Status", "computed"],
+      ["Dataset size", "4 pairs"],
+      ["Threshold", "85.0"],
+      ["Confidence", "low"],
+    ],
+    explanation: "A tiny classifier-style matrix was generated from existing positive source/dub pairs and mismatched negative pairs. It is a smoke test, not a benchmark.",
+  },
+];
+
+const confusionMatrix = [
+  { label: "True positive", value: 2, hint: "Correct paired outputs predicted as match", tone: "bg-emerald-500/10 border-emerald-500/25 text-emerald-700" },
+  { label: "False negative", value: 0, hint: "Correct pairs missed", tone: "bg-foreground/5 border-foreground/10 text-foreground" },
+  { label: "False positive", value: 2, hint: "Mismatched outputs still predicted as match", tone: "bg-amber-500/10 border-amber-500/25 text-amber-700" },
+  { label: "True negative", value: 0, hint: "Mismatched pairs rejected", tone: "bg-foreground/5 border-foreground/10 text-foreground" },
+];
+
+const matrixSamples = [
+  ["French source + French dub", "positive", "89.140", "match"],
+  ["Kannada source + Kannada dub", "positive", "88.865", "match"],
+  ["French source + Kannada dub", "negative", "88.865", "match"],
+  ["Kannada source + French dub", "negative", "89.140", "match"],
+];
+
+const flow = [
+  "Source video/audio",
+  "ASR segments",
+  "Source prosody profile",
+  "HuBERT feature extraction",
+  "Lightweight prosody adapter",
+  "Translated text",
+  "Prosody guidance plan",
+  "XTTS/Sarvam controls",
+  "Generated audio",
+  "Prosody validation",
+  "Frontend evidence",
+];
+
+const artifacts = [
+  ["source_prosody_profile.json", "Generated after ASR when the engine is enabled."],
+  ["tts_prosody_plan.json", "Generated after translation as TTS guidance metadata."],
+  ["hubert_features.json", "Generated by the isolated HuBERT worker when available."],
+  ["hubert_prosody_report.json", "Generated during validation when HuBERT features can be compared."],
+  ["prosody_validation_report.json", "Generated from source-vs-dub duration, rate, pauses, and energy proxies."],
+  ["adapter training_report.json", "Written under the ignored prosody adapter artifact directory."],
+  ["job_manifest.json", "Registers prosody artifacts without changing core routing."],
+  ["metrics_report.json", "Includes prosody status and quality evidence."],
+];
+
+const citations = [
+  {
+    title: "HuBERT: Self-Supervised Speech Representation Learning by Masked Prediction of Hidden Units",
+    source: "arXiv / Hugging Face Papers",
+    url: "https://huggingface.co/papers/2106.07447",
+    relevance: "Supports using pretrained HuBERT as a speech representation extractor.",
+  },
+  {
+    title: "facebook/hubert-base-ls960 model card",
+    source: "Hugging Face",
+    url: "https://huggingface.co/facebook/hubert-base-ls960",
+    relevance: "Documents the pretrained 16 kHz HuBERT base model used by this phase.",
+  },
+  {
+    title: "WavLM: Large-Scale Self-Supervised Pre-Training for Full Stack Speech Processing",
+    source: "Microsoft Research / arXiv",
+    url: "https://www.microsoft.com/en-us/research/publication/wavlm-large-scale-self-supervised-pre-training-for-full-stack-speech-processing/",
+    relevance: "Future comparison candidate for speaker and paralinguistic speech representations.",
+  },
+  {
+    title: "Duration modeling of neural TTS for automatic dubbing",
+    source: "Amazon Science",
+    url: "https://www.amazon.science/publications/duration-modeling-of-neural-tts-for-automatic-dubbing",
+    relevance: "Grounds duration, pause, and TTS rate control as real automatic dubbing constraints.",
+  },
+  {
+    title: "Prosodic Alignment for off-screen automatic dubbing",
+    source: "arXiv / Interspeech 2022",
+    url: "https://arxiv.org/abs/2204.02530",
+    relevance: "Describes matching phrasing and pauses for audiovisual coherence.",
+  },
+  {
+    title: "Dubbing in Practice: A Large Scale Study of Human Localization With Insights for Automatic Dubbing",
+    source: "MIT Press TACL",
+    url: "https://direct.mit.edu/tacl/article/doi/10.1162/tacl_a_00551/115968/Dubbing-in-Practice-A-Large-Scale-Study-of-Human",
+    relevance: "Shows why naturalness, timing, and source speech characteristics matter beyond text length.",
+  },
+];
+
+const roadmap = [
+  "Signed C2PA manifests",
+  "Advanced lip-sync evaluator",
+  "Multi-language batch generation",
+  "Redis/Celery GPU worker queue",
+  "Human review workflow",
+  "Glossary editor",
+  "COMET/QE translation scoring",
+  "WavLM comparison",
+  "Emotion classifier",
+  "Learned prosody encoder",
+];
+
+const responsibleSources = [
+  {
+    title: "India SGI / IT Rules developments",
+    source: "Press Information Bureau",
+    url: "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2245053",
+    supports: "Synthetic media labelling, traceable metadata, impersonation, election/user-harm, and deepfake governance readiness.",
+  },
+  {
+    title: "DPDP Act and Rules",
+    source: "MeitY / PIB",
+    url: "https://www.meity.gov.in/static/uploads/2024/02/Digital-Personal-Data-Protection-Act-2023.pdf",
+    supports: "Consent, withdrawal, breach, erasure, and minimization themes for consent and retention metadata.",
+  },
+  {
+    title: "CERT-In Directions",
+    source: "CERT-In",
+    url: "https://www.cert-in.org.in/Directions70B.jsp",
+    supports: "Incident-readiness and audit evidence context for preserving logs and reporting-relevant records.",
+  },
+  {
+    title: "C2PA technical specification",
+    source: "C2PA",
+    url: "https://spec.c2pa.org/specifications/specifications/2.2/specs/C2PA_Specification.html",
+    supports: "Content provenance and authenticity as a standard pattern; Vidiolingua currently writes a sidecar only.",
+  },
+  {
+    title: "Synthetic content transparency",
+    source: "NIST",
+    url: "https://www.nist.gov/publications/reducing-risks-posed-synthetic-content-overview-technical-approaches-digital-content",
+    supports: "Provenance, labeling, watermarking, testing, auditing, and transparency controls with known limits.",
+  },
+  {
+    title: "AI voice-cloning harms",
+    source: "FTC",
+    url: "https://www.ftc.gov/policy/advocacy-research/tech-at-ftc/2023/11/preventing-harms-ai-enabled-voice-cloning",
+    supports: "Voice cloning can enable fraud, impersonation, and appropriation risks that need multidisciplinary controls.",
+  },
+];
+
+const responsibleLayers = [
+  ["01", "Consent and authorization gate", "speaker/content rights evidence"],
+  ["02", "SGI risk classifier", "synthetic media risk level"],
+  ["03", "Abuse and impersonation guard", "first-pass misuse checks"],
+  ["04", "Disclosure controls", "visible/audio/metadata status"],
+  ["05", "Provenance manifest", "C2PA-style sidecar"],
+  ["06", "Watermarking and metadata", "optional disclosed copy"],
+  ["07", "Fingerprints and verification", "SHA-256, size, duration"],
+  ["08", "Compliance passport", "single export-ready summary"],
+];
+
+const complianceArtifacts = [
+  "consent_record.json",
+  "sgi_risk_report.json",
+  "abuse_risk_report.json",
+  "synthetic_disclosure_report.json",
+  "provenance_manifest.json",
+  "fingerprint_report.json",
+  "audit_ledger.jsonl",
+  "retention_policy.json",
+  "compliance_passport.json",
+  "compliance_passport.md",
+];
+
+const passportPreview = [
+  ["Passport status", "report_only"],
+  ["SGI risk level", "high on validation job"],
+  ["Consent recorded", "null on historical job"],
+  ["Provenance manifest", "created"],
+  ["Hashes generated", "SHA-256 sidecars"],
+  ["Disclosure status", "metadata-only by default"],
+  ["Safe for demo/export", "true"],
+  ["Warnings count", "1"],
+];
+
+export default function DifferentiatorsPage() {
+  return (
+    <main className="min-h-screen overflow-x-hidden noise-overlay">
+      <SiteNavigation />
+      <section className="mx-auto max-w-[1400px] px-6 pb-20 pt-32 lg:px-12 lg:pt-40">
+        <div className="mb-14 grid gap-8 lg:grid-cols-[0.82fr_1fr] lg:items-end">
+          <div>
+            <span className="mb-6 inline-flex items-center gap-3 font-mono text-sm text-muted-foreground">
+              <span className="h-px w-8 bg-foreground/30" />
+              Differentiators
+            </span>
+            <h1 className="font-display text-5xl leading-none tracking-normal lg:text-7xl">Differentiators that make Vidiolingua more than dubbing automation.</h1>
+          </div>
+          <p className="max-w-2xl text-lg leading-relaxed text-muted-foreground">
+            Vidiolingua is being built as an auditable localization system, not a one-click wrapper. Each section documents a real backend capability: the problem it solves, what was implemented, what evidence supports it, and what remains on the roadmap.
+          </p>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          {differentiators.map((item) => {
+            const href = "href" in item && item.href ? item.href : "#";
+            return (
+              <Link key={item.title} href={href} className="border border-foreground/10 bg-card p-5 transition-colors hover:border-foreground/30">
+                <div className="mb-6 flex items-start justify-between gap-4">
+                  <item.icon className="size-6 text-muted-foreground" />
+                  <Badge variant="default">{item.status}</Badge>
+                </div>
+                <h2 className="mb-3 font-display text-3xl">{item.title}</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">{item.body}</p>
+              </Link>
+            );
+          })}
+        </div>
+
+        <section className="mt-16 border border-foreground/10 bg-card p-7">
+          <div className="grid gap-8 lg:grid-cols-[0.75fr_1fr] lg:items-start">
+            <div>
+              <div className="mb-5 flex items-center gap-3 text-muted-foreground">
+                <BrainCircuit className="size-6" />
+                <span className="font-mono text-xs uppercase tracking-[0.16em]">Main differentiator</span>
+              </div>
+              <h2 className="font-display text-5xl leading-none">HuBERT-guided Prosody & Elocution Engine.</h2>
+              <p className="mt-5 text-muted-foreground">
+                Word translation alone does not preserve delivery. Dubbed speech can become flat, rushed, badly timed, or disconnected from the source video when rhythm, pauses, speech rate, energy, emphasis, and duration pressure are invisible.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {[
+                ["Problem", "Basic dubbing systems optimize text and speech output, while human dubbing also follows timing and delivery cues."],
+                ["Implemented", "The backend extracts source prosody, builds a TTS guidance plan, applies guarded XTTS/Sarvam controls, and validates source-vs-dub delivery."],
+                ["HuBERT role", "Pretrained HuBERT embeddings are extracted from source and dubbed speech as frozen speech representations."],
+                ["Adapter role", "A project-trained lightweight adapter calibrates similarity across HuBERT distance, duration, speech rate, pauses, and energy proxies."],
+              ].map(([title, body]) => (
+                <div key={title} className="border border-foreground/10 p-4">
+                  <h3 className="mb-2 font-display text-2xl">{title}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-12 border border-foreground/10 bg-card p-7">
+          <div className="mb-7 grid gap-4 lg:grid-cols-[0.72fr_1fr] lg:items-end">
+            <div>
+              <div className="mb-5 flex items-center gap-3 text-muted-foreground">
+                <BrainCircuit className="size-6" />
+                <span className="font-mono text-xs uppercase tracking-[0.16em]">Artifact-backed evidence</span>
+              </div>
+              <h2 className="font-display text-5xl leading-none">HuBERT Adapter Evidence</h2>
+            </div>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              These values come from the local validation artifacts: <span className="font-mono">hubert_features.json</span>, <span className="font-mono">training_report.json</span>, and <span className="font-mono">hubert_prosody_adapter_kn_report.json</span>. No model weights or embeddings are exposed here.
+            </p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {hubertEvidence.map((card) => (
+              <div key={card.title} className="border border-foreground/10 p-5">
+                <card.icon className="mb-6 size-6 text-muted-foreground" />
+                <h3 className="mb-4 font-display text-3xl">{card.title}</h3>
+                <div className="grid gap-2">
+                  {card.rows.map(([label, value]) => (
+                    <div key={label} className="border border-foreground/10 p-3">
+                      <div className="font-mono text-[0.66rem] uppercase tracking-[0.16em] text-muted-foreground">{label}</div>
+                      <div className="mt-1 text-sm">{value}</div>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{card.explanation}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-5 border border-foreground/10 p-4 text-sm text-muted-foreground">
+            Training limitations recorded by the backend: calibration targets are project heuristics, not human MOS labels; the paired dataset is small; and more source/dub examples are required before confidence should be raised.
+          </div>
+        </section>
+
+        <section className="mt-12 border border-foreground/10 bg-card p-7">
+          <div className="mb-7 grid gap-4 lg:grid-cols-[0.62fr_1fr] lg:items-end">
+            <div>
+              <div className="mb-5 flex items-center gap-3 text-muted-foreground">
+                <Gauge className="size-6" />
+                <span className="font-mono text-xs uppercase tracking-[0.16em]">Tiny evaluation matrix</span>
+              </div>
+              <h2 className="font-display text-5xl leading-none">HuBERT Adapter Confusion Matrix</h2>
+            </div>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Generated from <span className="font-mono">outputs\validation\hubert_adapter_confusion_matrix.json</span> using existing HuBERT embeddings and adapter scores only. Threshold: <span className="font-mono">85.0</span>. Dataset: 2 positive pairs and 2 mismatched negative pairs. Confidence remains low.
+            </p>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
+            <div className="border border-foreground/10 p-5">
+              <div className="mb-4 grid grid-cols-[0.8fr_1fr_1fr] gap-2 text-center font-mono text-[0.66rem] uppercase tracking-[0.16em] text-muted-foreground">
+                <div />
+                <div>Predicted match</div>
+                <div>Predicted mismatch</div>
+              </div>
+              <div className="grid grid-cols-[0.8fr_1fr_1fr] gap-2">
+                <div className="flex items-center text-sm text-muted-foreground">Actual match</div>
+                {confusionMatrix.slice(0, 2).map((cell) => (
+                  <div key={cell.label} className={`min-h-32 border p-4 ${cell.tone}`}>
+                    <div className="font-mono text-[0.66rem] uppercase tracking-[0.16em]">{cell.label}</div>
+                    <div className="mt-3 font-display text-6xl leading-none">{cell.value}</div>
+                    <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{cell.hint}</p>
+                  </div>
+                ))}
+                <div className="flex items-center text-sm text-muted-foreground">Actual mismatch</div>
+                {confusionMatrix.slice(2).map((cell) => (
+                  <div key={cell.label} className={`min-h-32 border p-4 ${cell.tone}`}>
+                    <div className="font-mono text-[0.66rem] uppercase tracking-[0.16em]">{cell.label}</div>
+                    <div className="mt-3 font-display text-6xl leading-none">{cell.value}</div>
+                    <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{cell.hint}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid gap-4">
+              <div className="grid gap-3 sm:grid-cols-4">
+                {[
+                  ["Accuracy", "50.0%"],
+                  ["Precision", "50.0%"],
+                  ["Recall", "100.0%"],
+                  ["Specificity", "0.0%"],
+                ].map(([label, value]) => (
+                  <div key={label} className="border border-foreground/10 p-4">
+                    <div className="font-mono text-[0.66rem] uppercase tracking-[0.16em] text-muted-foreground">{label}</div>
+                    <div className="mt-2 font-display text-4xl">{value}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="border border-amber-500/25 bg-amber-500/5 p-4">
+                <div className="mb-2 flex items-center gap-2 text-amber-700">
+                  <AlertTriangle className="size-4" />
+                  <div className="font-mono text-[0.66rem] uppercase tracking-[0.16em]">Interpretation warning</div>
+                </div>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  The negatives are intentionally mismatched project jobs, but the current adapter still scores them above threshold. This is useful evidence: the adapter needs more labeled negative examples before this matrix should be treated as a reliable classifier.
+                </p>
+              </div>
+              <div className="grid gap-2">
+                {matrixSamples.map(([pair, type, score, prediction]) => (
+                  <div key={pair} className="grid gap-2 border border-foreground/10 p-3 text-sm sm:grid-cols-[1fr_auto_auto_auto] sm:items-center">
+                    <div>{pair}</div>
+                    <div className="font-mono text-[0.66rem] uppercase tracking-[0.16em] text-muted-foreground">{type}</div>
+                    <div className="font-mono text-xs">score {score}</div>
+                    <div className="font-mono text-xs">{prediction}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-12 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="border border-foreground/10 bg-foreground p-7 text-background">
+            <BookOpen className="mb-6 size-7 text-background/65" />
+            <h2 className="mb-4 font-display text-4xl">Why HuBERT?</h2>
+            <p className="text-background/70">
+              HuBERT is a self-supervised speech representation model trained before Vidiolingua. That makes it useful as a frozen acoustic representation layer, while keeping the project claim honest: Vidiolingua trains a small adapter on top of HuBERT features, not HuBERT itself. WavLM remains a credible future comparison for speaker and paralinguistic tasks.
+            </p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            {citations.map((citation) => (
+              <a key={citation.title} href={citation.url} className="border border-foreground/10 bg-card p-4 transition-colors hover:border-foreground/30">
+                <div className="mb-3 font-mono text-[0.68rem] uppercase tracking-[0.16em] text-muted-foreground">{citation.source}</div>
+                <h3 className="mb-2 font-display text-2xl">{citation.title}</h3>
+                <p className="text-sm text-muted-foreground">{citation.relevance}</p>
+                <div className="mt-4 text-xs text-muted-foreground">Accessed May 6, 2026</div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-12 border border-foreground/10 bg-card p-7">
+          <div className="mb-6 flex items-center gap-3">
+            <Route className="size-6 text-muted-foreground" />
+            <h2 className="font-display text-4xl">Differentiator flow</h2>
+          </div>
+          <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">
+            {flow.map((step, index) => (
+              <div key={step} className="border border-foreground/10 p-4">
+                <div className="mb-5 font-mono text-xs text-muted-foreground">{String(index + 1).padStart(2, "0")}</div>
+                <div className="text-sm">{step}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-12 grid gap-6 lg:grid-cols-2">
+          <div className="border border-foreground/10 bg-card p-7">
+            <div className="mb-6 flex items-center gap-3">
+              <FileJson className="size-6 text-muted-foreground" />
+              <h2 className="font-display text-4xl">Backend artifacts</h2>
+            </div>
+            <div className="grid gap-3">
+              {artifacts.map(([name, body]) => (
+                <div key={name} className="border border-foreground/10 p-3">
+                  <div className="font-mono text-xs">{name}</div>
+                  <p className="mt-1 text-sm text-muted-foreground">{body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="border border-foreground/10 bg-card p-7">
+            <div className="mb-6 flex items-center gap-3">
+              <CheckCircle2 className="size-6 text-muted-foreground" />
+              <h2 className="font-display text-4xl">Evidence now</h2>
+            </div>
+            <div className="grid gap-3 text-sm">
+              <div className="border border-foreground/10 p-3">HuBERT model: facebook/hubert-base-ls960.</div>
+              <div className="border border-foreground/10 p-3">Feature extraction: computed on CPU with 768-dimensional embeddings.</div>
+              <div className="border border-foreground/10 p-3">Adapter status: trained ridge adapter with 2 project examples.</div>
+              <div className="border border-foreground/10 p-3">Kannada validation: HuBERT-guided prosody similarity 88.865/100, confidence low.</div>
+              <div className="border border-foreground/10 p-3">Confusion matrix: tiny project-pair matrix computed, TP 2, FP 2, TN 0, FN 0.</div>
+              <div className="border border-foreground/10 p-3">Kannada/French paths: protected and not regenerated by this page.</div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-12 border border-foreground/10 bg-card p-7">
+          <div className="mb-6 flex items-center gap-3">
+            <Layers3 className="size-6 text-muted-foreground" />
+            <h2 className="font-display text-4xl">Expandable roadmap slots</h2>
+          </div>
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+            {roadmap.map((item) => (
+              <div key={item} className="border border-foreground/10 p-4">
+                <Badge variant="outline" className="mb-4">Roadmap</Badge>
+                <div className="text-sm">{item}</div>
+              </div>
+            ))}
+          </div>
+          <Button asChild className="mt-7 rounded-full">
+            <Link href="/architecture">
+              View architecture
+              <ArrowRight className="size-4" />
+            </Link>
+          </Button>
+        </section>
+
+        <section id="responsible-ai-provenance" className="mt-12 scroll-mt-28 border border-foreground/10 bg-card p-7">
+          <div className="mb-8 grid gap-6 lg:grid-cols-[0.72fr_1fr] lg:items-end">
+            <div>
+              <div className="mb-5 flex items-center gap-3 text-muted-foreground">
+                <ClipboardCheck className="size-6" />
+                <span className="font-mono text-xs uppercase tracking-[0.16em]">Implemented backend differentiator</span>
+              </div>
+              <h2 className="font-display text-5xl leading-none">Responsible AI & Provenance Engine</h2>
+            </div>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              AI dubbing can create realistic synthetic speech. Speaker-reference dubbing and translated media can be misused for impersonation, metadata can be stripped, and downstream teams need consent, disclosure, traceability, fingerprints, and audit evidence attached to the generated dub.
+            </p>
+          </div>
+
+          <div className="grid gap-5 lg:grid-cols-3">
+            {[
+              ["Why this exists", "Localization should be auditable, consent-aware, and safe enough for enterprise and OTT review, not merely impressive generation."],
+              ["What Vidiolingua writes", "Each job can produce consent, SGI risk, abuse-risk, disclosure, provenance, fingerprint, retention, audit, and compliance-passport artifacts."],
+              ["Default posture", "Report-only mode generates evidence and warnings without blocking French XTTS or Kannada IndicTrans2 + Sarvam practical paths."],
+            ].map(([title, body]) => (
+              <div key={title} className="border border-foreground/10 p-5">
+                <h3 className="mb-3 font-display text-3xl">{title}</h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">{body}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 grid gap-6 lg:grid-cols-[0.82fr_1fr]">
+            <div className="border border-foreground/10 bg-foreground p-6 text-background">
+              <ShieldCheck className="mb-6 size-7 text-background/65" />
+              <h3 className="mb-4 font-display text-4xl">Legal and ethical proof, without overclaiming.</h3>
+              <p className="text-sm leading-relaxed text-background/70">
+                The sources support the problem and the design direction: consent evidence, synthetic media risk classification, traceability, disclosure, provenance, and audit readiness. They do not make this feature a legal certification, C2PA certification, or complete abuse-prevention system.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {responsibleSources.map((source) => (
+                <a key={source.title} href={source.url} className="border border-foreground/10 p-4 transition-colors hover:border-foreground/30">
+                  <div className="mb-3 font-mono text-[0.68rem] uppercase tracking-[0.16em] text-muted-foreground">{source.source}</div>
+                  <h4 className="mb-2 font-display text-2xl">{source.title}</h4>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{source.supports}</p>
+                  <div className="mt-4 text-xs text-muted-foreground">Accessed May 6, 2026</div>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-8 border border-foreground/10 p-6">
+            <div className="mb-6 flex items-center gap-3">
+              <Layers3 className="size-6 text-muted-foreground" />
+              <h3 className="font-display text-4xl">Defense-in-depth architecture</h3>
+            </div>
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+              {responsibleLayers.map(([index, title, body]) => (
+                <div key={title} className="min-h-32 border border-foreground/10 p-4">
+                  <div className="mb-5 font-mono text-xs text-muted-foreground">{index}</div>
+                  <div className="font-display text-2xl">{title}</div>
+                  <p className="mt-2 text-sm text-muted-foreground">{body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-8 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="border border-foreground/10 p-6">
+              <div className="mb-5 flex items-center gap-3">
+                <FileJson className="size-6 text-muted-foreground" />
+                <h3 className="font-display text-4xl">Backend artifacts</h3>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {complianceArtifacts.map((artifact) => (
+                  <div key={artifact} className="border border-foreground/10 p-3 font-mono text-xs">{artifact}</div>
+                ))}
+              </div>
+            </div>
+
+            <div className="border border-foreground/10 p-6">
+              <div className="mb-5 flex items-center gap-3">
+                <IdCard className="size-6 text-muted-foreground" />
+                <h3 className="font-display text-4xl">Compliance passport preview</h3>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {passportPreview.map(([label, value]) => (
+                  <div key={label} className="border border-foreground/10 p-3">
+                    <div className="font-mono text-[0.68rem] uppercase tracking-[0.16em] text-muted-foreground">{label}</div>
+                    <div className="mt-1 text-sm">{value}</div>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-4 text-sm text-muted-foreground">Validation writes real output to <span className="font-mono">outputs\validation\responsible_ai_compliance_test\compliance</span>.</p>
+            </div>
+          </div>
+
+          <div className="mt-8 grid gap-6 lg:grid-cols-2">
+            <div className="border border-emerald-500/20 bg-emerald-500/5 p-6">
+              <Badge variant="outline" className="mb-5">This is</Badge>
+              <div className="grid gap-3 text-sm">
+                {["Compliance-readiness layer", "Consent/provenance/audit system", "Synthetic media traceability", "Responsible AI guardrail", "India-aware synthetic media governance readiness"].map((item) => (
+                  <div key={item} className="border border-foreground/10 bg-background/50 p-3">{item}</div>
+                ))}
+              </div>
+            </div>
+            <div className="border border-amber-500/25 bg-amber-500/5 p-6">
+              <Badge variant="outline" className="mb-5">This is not</Badge>
+              <div className="grid gap-3 text-sm">
+                {["Legal certification", "Perfect deepfake prevention", "Proof of speaker identity by itself", "C2PA certification or signed C2PA", "A public takedown system yet"].map((item) => (
+                  <div key={item} className="border border-foreground/10 bg-background/50 p-3">{item}</div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 border border-foreground/10 p-6">
+            <div className="mb-5 flex items-center gap-3">
+              <Database className="size-6 text-muted-foreground" />
+              <h3 className="font-display text-4xl">Roadmap</h3>
+            </div>
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+              {["Real C2PA signing", "Persistent consent database", "Admin abuse-response console", "Takedown workflow", "Hosted verification endpoint", "Durable audio watermarking", "Perceptual hashing", "Role-based access control", "Legal review workflow", "Verification API for passports", "Consent withdrawal workflow", "Organization policy templates"].map((item) => (
+                <div key={item} className="border border-foreground/10 p-4">
+                  <Fingerprint className="mb-4 size-5 text-muted-foreground" />
+                  <div className="text-sm">{item}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </section>
+      <SiteFooter />
+    </main>
+  );
+}

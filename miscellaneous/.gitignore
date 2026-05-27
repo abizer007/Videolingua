@@ -1,0 +1,114 @@
+# Secrets
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+NEW_Frontend/.env.local
+frontend-next/.env.local
+
+# Python envs
+.venv*/
+venv/
+env/
+.envs/
+.uv_python/
+.uv_cache/
+
+# Python caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pip_cache/
+.pip_tmp/
+pip-wheel-metadata/
+
+# Node/frontend
+node_modules/
+.next/
+dist/
+build/
+out/
+.vercel/
+NEW_Frontend/node_modules/
+NEW_Frontend/.next/
+NEW_Frontend/out/
+frontend-next/node_modules/
+frontend-next/.next/
+frontend-next/out/
+
+# Models / weights / HF cache
+models/
+checkpoints/
+weights/
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+*.onnx
+.hf_cache/
+.cache/
+huggingface/
+
+# Generated media / outputs
+outputs/
+jobs/
+cost_financial_analysis.html
+cost_financial_analysis.png
+assets/cost_financial_analysis.html
+assets/cost_financial_analysis.png
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.wav
+*.mp3
+*.aac
+*.flac
+
+# Pipeline runtime folders
+asr/output/
+translation/input/*.json
+translation/output/
+tts/input/
+tts/output/
+lipsync/input/*.mp4
+lipsync/input/*.wav
+lipsync/output/*.mp4
+
+# Local backups / legacy
+_snapshots/
+_legacy/
+*.bak
+*.backup
+*.bak_*
+
+# Logs/temp
+logs/
+COMMAND_LOG.md
+*.log
+tmp/
+temp/
+*.tmp
+.tmp/
+.runtime_tmp/
+.numba_cache/
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local assistant/tooling state
+.claude/

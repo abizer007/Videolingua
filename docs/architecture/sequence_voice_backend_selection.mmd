@@ -1,0 +1,28 @@
+sequenceDiagram
+  autonumber
+  participant TTS as tts/run_tts.py
+  participant Router as voice/router.py
+  participant Policy as voice/base.py language policy
+  participant XTTS as XTTSEngine
+  participant Sarvam as SarvamEngine
+  participant F5 as IndicF5Engine disabled
+  participant Validate as audio_validation
+
+  TTS->>Router: select_voice_engine(request)
+  Router->>Policy: normalize target language
+  alt Sarvam-supported Indian language and indic backend is sarvam
+    Router->>Sarvam: require SARVAM_API_KEY and synthesize managed TTS
+    Sarvam-->>Router: WAV + managed_tts metadata
+  else XTTS-supported global language
+    Router->>Router: require reference_audio when cloning_required
+    Router->>XTTS: synthesize with speaker_wav and language
+    XTTS-->>Router: WAV + speaker-reference metadata
+  else IndicF5 explicitly preferred and enabled
+    Router->>F5: require local_enabled, reference audio, exact reference text
+    F5-->>Router: WAV only if approved local execution works
+  else unsupported or disabled route
+    Router-->>TTS: fail loudly; no generic fallback
+  end
+  Router->>Validate: validate_generated_audio(output.wav)
+  Validate-->>TTS: pass or raise clear error
+

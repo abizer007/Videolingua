@@ -1,0 +1,463 @@
+<!doctype html>
+<!--
+  VidioLingua Cost & Financial Analysis
+  Pricing checked: 2026-04-30.
+  Source notes:
+  - Repo baseline: outputs/french_official_test/pipeline_result.json, docs/WORKING_STATE_XTTS_PRACTICAL_2026-04-28.md
+  - RunPod RTX 4090: https://www.runpod.io/gpu-models/rtx-4090
+  - Lambda A10: https://lambda.ai/instances
+  - RunPod storage: https://docs.runpod.io/pods/pricing
+  - Rask AI pricing: https://www.rask.ai/pricing
+  - Voquent dubbing costs: https://www.voquent.com/dubbing/costs/
+  - Google Cloud Translation: https://cloud.google.com/translate/pricing
+  All estimates are rounded; cloud GPU throughput is an assumption, not a repo benchmark.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cost & Financial Analysis - VidioLingua</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5d6880;
+      --line: #cfd6e3;
+      --blue: #24457a;
+      --navy: #101a2d;
+      --navy-2: #17243b;
+      --table-line: #30415f;
+      --accent: #2f75c8;
+      --green: #1d9a68;
+      --panel: #ffffff;
+      --wash: #f3f6fb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f4f6fa;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+    }
+
+    .slide {
+      width: 1600px;
+      height: 900px;
+      margin: 0 auto;
+      background:
+        linear-gradient(180deg, rgba(246, 248, 252, 0.96), rgba(238, 242, 248, 0.98)),
+        #f4f6fa;
+      padding: 40px 58px 34px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .top-rule {
+      height: 5px;
+      width: 100%;
+      background: linear-gradient(90deg, #1d3260, #2d74bd 58%, #23a26d);
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: end;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 44px;
+      line-height: 1.04;
+      letter-spacing: 0;
+      font-weight: 800;
+      color: #10213f;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .date {
+      text-align: right;
+      color: #41506b;
+      font-size: 14px;
+      line-height: 1.5;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 17px 0 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid #d9dfeb;
+      border-radius: 6px;
+      box-shadow: 0 10px 24px rgba(40, 54, 85, 0.08);
+    }
+
+    .intro {
+      padding: 16px 22px;
+      min-height: 132px;
+    }
+
+    .section-title {
+      margin: 0 0 9px;
+      color: #18305a;
+      font-size: 16px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 21px;
+    }
+
+    li {
+      margin: 6px 0;
+      color: #2c384d;
+      font-size: 14px;
+      line-height: 1.24;
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .kpi {
+      padding: 16px 18px 14px;
+      min-height: 132px;
+      border-radius: 6px;
+      color: #fff;
+      background: linear-gradient(180deg, var(--navy), var(--navy-2));
+      border: 1px solid #263753;
+    }
+
+    .kpi .label {
+      color: #aebbd2;
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .kpi .value {
+      margin-top: 9px;
+      font-size: 27px;
+      line-height: 1.02;
+      font-weight: 850;
+    }
+
+    .kpi .note {
+      margin-top: 8px;
+      color: #d7deea;
+      font-size: 12px;
+      line-height: 1.28;
+    }
+
+    .mid {
+      display: grid;
+      grid-template-columns: 1.36fr 0.64fr;
+      gap: 18px;
+      margin-top: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .dark-table {
+      overflow: hidden;
+      background: var(--navy);
+      color: #f5f8ff;
+      border-radius: 6px;
+      border: 1px solid #263753;
+    }
+
+    .dark-table h2 {
+      margin: 0;
+      padding: 9px 16px;
+      font-size: 15px;
+      line-height: 1;
+      background: #0d1728;
+      color: #fff;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    th {
+      padding: 7px 10px;
+      text-align: left;
+      color: #9fb1ce;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      background: #16243b;
+      border-bottom: 1px solid var(--table-line);
+    }
+
+    td {
+      padding: 6px 10px;
+      vertical-align: top;
+      font-size: 11px;
+      line-height: 1.1;
+      color: #edf3fb;
+      border-bottom: 1px solid var(--table-line);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .muted-cell {
+      color: #b8c4d7;
+    }
+
+    .estimate {
+      color: #dff7ec;
+      font-weight: 760;
+    }
+
+    .side-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .takeaways {
+      padding: 12px 17px 10px;
+      border-left: 6px solid var(--green);
+    }
+
+    .takeaways li {
+      font-size: 12px;
+      margin: 5px 0;
+    }
+
+    .risks {
+      padding: 12px 17px 10px;
+      background: #fff9ef;
+      border-color: #efdab5;
+    }
+
+    .risks .section-title {
+      color: #6b4b14;
+    }
+
+    .risks li {
+      color: #4b3b24;
+      font-size: 11px;
+      margin: 4px 0;
+    }
+
+    .comparison {
+      margin-top: 16px;
+    }
+
+    .comparison th:nth-child(1) { width: 22%; }
+    .comparison th:nth-child(2) { width: 16%; }
+    .comparison th:nth-child(3) { width: 16%; }
+    .comparison th:nth-child(4) { width: 23%; }
+    .comparison th:nth-child(5) { width: 23%; }
+
+    .foot {
+      position: absolute;
+      left: 58px;
+      right: 58px;
+      bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      color: #6b7589;
+      font-size: 11px;
+      border-top: 1px solid #d5dce8;
+      padding-top: 7px;
+    }
+  </style>
+</head>
+<body>
+  <main class="slide">
+    <div class="top-rule"></div>
+    <header>
+      <div>
+        <h1>Cost &amp; Financial Analysis</h1>
+        <div class="subtitle">Repo-grounded feasibility view for the working XTTS video-localization pipeline</div>
+      </div>
+      <div class="date">VidioLingua<br />pricing checked: 2026-04-30</div>
+    </header>
+    <div class="divider"></div>
+
+    <section class="grid">
+      <div class="panel intro">
+        <p class="section-title">Why the pipeline is financially efficient</p>
+        <ul>
+          <li>Working path converts localization spend into compute, storage, and QA instead of per-minute studio labor.</li>
+          <li>Open-source/local stages reduce recurring API exposure when XTTS, WhisperX, IndicTrans2, and ffmpeg paths are used.</li>
+          <li>Cloud GPU use can be rented per batch, keeping infrastructure variable while preserving the local/offline architecture.</li>
+        </ul>
+      </div>
+      <div class="kpis">
+        <div class="kpi">
+          <div class="label">Repo baseline</div>
+          <div class="value">~10x realtime</div>
+          <div class="note">30.57s known-good XTTS output took 305s end to end on the practical CPU-heavy run.</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Cloud GPU compute</div>
+          <div class="value">$0.003-$0.022/min</div>
+          <div class="note">Estimate using $0.69-$1.29/GPU-hour and assumed 1x-4x realtime throughput.</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Manual baseline</div>
+          <div class="value">$39-$93/min</div>
+          <div class="note">Public professional dubbing package rates; excludes project-specific negotiation.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mid">
+      <div class="dark-table">
+        <h2>Current Pipeline Cost Drivers</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Stage</th>
+              <th>Working / configured path</th>
+              <th>Cost driver</th>
+              <th>Financial note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ASR</td>
+              <td>ffmpeg + WhisperX; faster-whisper fallback</td>
+              <td>CPU/GPU inference</td>
+              <td class="estimate">Local mode has no ASR API fee; diarization needs HF access if enabled.</td>
+            </tr>
+            <tr>
+              <td>Translation</td>
+              <td>IndicTrans2 local; Llama or deep-translator when allowed</td>
+              <td>Local runtime or optional API calls</td>
+              <td class="estimate">Google NMT alternative is $20 / 1M chars after free credit.</td>
+            </tr>
+            <tr>
+              <td>Voice / TTS</td>
+              <td>Coqui XTTSv2 clone; Sarvam optional for Indic voices</td>
+              <td>Largest current elapsed-time bottleneck</td>
+              <td class="estimate">XTTS model is ~1.9 GB; known-good TTS env is CPU-only.</td>
+            </tr>
+            <tr>
+              <td>Lip-sync / mux</td>
+              <td>Known run used ffmpeg mux; Wav2Lip/MuseTalk optional</td>
+              <td>GPU video inference if lip animation is enabled</td>
+              <td class="estimate">Known output proves mux path; GPU lip-sync is unbenchmarked.</td>
+            </tr>
+            <tr>
+              <td>Storage</td>
+              <td>Models + per-job media, audio, logs, and MP4s</td>
+              <td>Cache and output retention</td>
+              <td class="estimate">RunPod network storage is $0.07/GB-month under 1 TB.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="side-stack">
+        <div class="panel takeaways">
+          <p class="section-title">Key Financial Takeaways</p>
+          <ul>
+            <li>Compute is small; human QA becomes the main scaling cost.</li>
+            <li>GPU enablement is the highest ROI infrastructure step.</li>
+            <li>Local XTTS keeps vendor spend near zero for supported languages.</li>
+            <li>Paid APIs are useful for gaps, not as the default cost base.</li>
+          </ul>
+        </div>
+        <div class="panel risks">
+          <p class="section-title">Risks / Assumptions</p>
+          <ul>
+            <li>GPU throughput is estimated until a CUDA cloud benchmark exists.</li>
+            <li>Known run used ffmpeg mux, not Wav2Lip or MuseTalk animation.</li>
+            <li>API costs apply only when Sarvam, Hume, ElevenLabs, or Google routes are selected.</li>
+            <li>Language QA and legal review are excluded from infrastructure math.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="dark-table comparison">
+      <h2>Financial Comparison by Delivery Model</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Estimated cost / video min</th>
+            <th>Estimated 60-min batch</th>
+            <th>Expected infrastructure bottleneck</th>
+            <th>Scale implication</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Manual dubbing / localization</td>
+            <td class="estimate">$39-$93</td>
+            <td class="estimate">$2.3k-$5.6k</td>
+            <td class="muted-cell">Talent, studio, editing, and QA schedule</td>
+            <td class="muted-cell">Cost scales with languages and minutes.</td>
+          </tr>
+          <tr>
+            <td>API-based automated dubbing</td>
+            <td class="estimate">$3-$6 with lip-sync</td>
+            <td class="estimate">$180-$360</td>
+            <td class="muted-cell">Credits, file limits, queue time, platform lock-in</td>
+            <td class="muted-cell">Fast, but recurring spend rises with volume.</td>
+          </tr>
+          <tr>
+            <td>VidioLingua local / open-source</td>
+            <td class="estimate">$0 external API on XTTS path</td>
+            <td class="estimate">~10h elapsed on CPU baseline</td>
+            <td class="muted-cell">CPU-only XTTS/ASR and local availability</td>
+            <td class="muted-cell">Best for demos and low-cash batches.</td>
+          </tr>
+          <tr>
+            <td>VidioLingua cloud-GPU deployment</td>
+            <td class="estimate">$0.003-$0.022 compute only</td>
+            <td class="estimate">$0.20-$1.30 compute only</td>
+            <td class="muted-cell">CUDA image, model cache, utilization, lip-sync choice</td>
+            <td class="muted-cell">Infra break-even is immediate vs manual; QA governs budget.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="foot">
+      <span>Numbers are rounded estimates; exact production cost requires a Vidiolingua GPU benchmark.</span>
+      <span>See docs/cost_financial_analysis_notes.md for assumptions, formulas, and sources.</span>
+    </div>
+  </main>
+</body>
+</html>

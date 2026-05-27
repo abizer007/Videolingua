@@ -1,0 +1,40 @@
+{
+  "terms": [
+    {
+      "term": "Vidiolingua",
+      "spoken_form": "vi-dee-oh-ling-gwa",
+      "preserve_text": true,
+      "languages": ["en", "fr", "kn", "hi"]
+    },
+    {
+      "term": "Techgium",
+      "spoken_form": "tek-jee-um",
+      "preserve_text": true,
+      "languages": ["en", "kn", "hi"]
+    },
+    {
+      "term": "NMIMS",
+      "spoken_form": "N M I M S",
+      "preserve_text": true,
+      "languages": ["en", "kn", "hi"]
+    },
+    {
+      "term": "XTTS",
+      "spoken_form": "X T T S",
+      "preserve_text": true,
+      "languages": ["en", "fr", "es", "de"]
+    },
+    {
+      "term": "IndicTrans2",
+      "spoken_form": "Indic Trans two",
+      "preserve_text": true,
+      "languages": ["en", "kn", "hi"]
+    },
+    {
+      "term": "Sarvam",
+      "spoken_form": "sar-vam",
+      "preserve_text": true,
+      "languages": ["en", "kn", "hi"]
+    }
+  ]
+}

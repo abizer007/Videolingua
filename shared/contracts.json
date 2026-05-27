@@ -1,0 +1,97 @@
+{
+  "version": "1.0.0",
+  "description": "Data format specifications and interface contracts for VidioLingua pipeline stages",
+  "pipeline_stages": {
+    "asr": {
+      "input": {
+        "format": "video",
+        "extensions": [".mp4", ".avi", ".mov"],
+        "description": "Video files containing speech to be transcribed"
+      },
+      "output": {
+        "format": "json",
+        "filename_pattern": "{video_name}_transcription.json",
+        "schema": {
+          "video_file": "string (path to original video)",
+          "segments": [
+            {
+              "start": "float (seconds)",
+              "end": "float (seconds)",
+              "text": "string (transcribed text)"
+            }
+          ],
+          "language": "string (ISO 639-1 language code, e.g., 'en')",
+          "language_confidence": "float (0-1 confidence score)"
+        }
+      }
+    },
+    "translation": {
+      "input": {
+        "format": "json",
+        "filename_pattern": "*_transcription.json",
+        "description": "Transcription files from ASR module"
+      },
+      "output": {
+        "format": "json",
+        "filename_pattern": "{transcription_name}_{language_code}.json",
+        "target_languages": ["hi", "es", "fr", "de", "ja", "zh", "ar", "pt"],
+        "schema": {
+          "video_file": "string (path to original video)",
+          "segments": [
+            {
+              "start": "float (seconds)",
+              "end": "float (seconds)",
+              "text": "string (translated text)"
+            }
+          ],
+          "language": "string (ISO 639-1 language code)"
+        }
+      }
+    },
+    "tts": {
+      "input": {
+        "format": "json",
+        "filename_pattern": "*_transcription_*.json",
+        "description": "Translated transcription files from translation module"
+      },
+      "output": {
+        "format": "audio",
+        "extensions": [".wav", ".mp3"],
+        "filename_pattern": "{transcription_name}_{language_code}.wav",
+        "description": "Audio files with synthesized speech"
+      }
+    },
+    "lipsync": {
+      "input": {
+        "video_format": "video",
+        "video_extensions": [".mp4", ".avi", ".mov"],
+        "audio_format": "audio",
+        "audio_extensions": [".wav", ".mp3"],
+        "description": "Original video file and generated audio files from TTS module"
+      },
+      "output": {
+        "format": "video",
+        "extensions": [".mp4"],
+        "filename_pattern": "{video_name}_dubbed_{language_code}.mp4",
+        "description": "Final lip-synced dubbed video files"
+      }
+    }
+  },
+  "language_codes": {
+    "en": "English",
+    "hi": "Hindi",
+    "es": "Spanish",
+    "fr": "French",
+    "de": "German",
+    "ja": "Japanese",
+    "zh": "Chinese",
+    "ar": "Arabic",
+    "pt": "Portuguese"
+  },
+  "file_naming_conventions": {
+    "asr_output": "{original_video_name}_transcription.json",
+    "translation_output": "{transcription_name}_{target_language}.json",
+    "tts_output": "{transcription_name}_{language_code}.wav",
+    "lipsync_output": "{original_video_name}_dubbed_{language_code}.mp4"
+  }
+}

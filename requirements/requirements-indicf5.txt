@@ -1,0 +1,22 @@
+# IndicF5 runtime requirements.
+# Install only into D:\Vidiolingua\.venv_indicf5 with scripts\setup_indicf5_env.ps1.
+# Do not install these into .venv_tts, .venv_api, .venv_asr, .venv_bgm, or .venv_indictrans2.
+
+# CUDA PyTorch is installed separately by the setup script from the cu121 index:
+# torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1
+
+accelerate>=0.34,<1.0
+huggingface-hub>=0.25,<1.0
+safetensors>=0.4.5,<1.0
+soundfile>=0.12,<1.0
+numpy>=1.26,<2.3
+scipy>=1.11,<2.0
+transformers>=4.44,<5.0
+einops>=0.7,<1.0
+cached_path>=1.6,<2.0
+hydra-core>=1.3,<2.0
+vocos>=0.1,<1.0
+torchdiffeq>=0.2,<1.0
+x_transformers>=1.31,<3.0
+f5-tts>=1.1,<2.0
+pydub>=0.25,<1.0

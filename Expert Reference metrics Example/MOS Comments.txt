@@ -1,0 +1,1 @@
+Kannada speech is understandable. Timing is acceptable. Some delivery sounds less natural than the original speaker because Sarvam is managed TTS, not exact cloning.

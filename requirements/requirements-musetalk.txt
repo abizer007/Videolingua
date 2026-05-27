@@ -1,0 +1,10 @@
+# MuseTalk 1.5 is repo/version-specific. Install the upstream MuseTalk
+# requirements inside .venv_musetalk after cloning MuseTalk and selecting the
+# matching CUDA/PyTorch wheel set.
+#
+# This file keeps the VidioLingua env contract explicit without pretending the
+# project can safely resolve MuseTalk from PyPI alone.
+numpy>=1.24.0
+opencv-python>=4.8.0
+ffmpeg-python>=0.2.0
+soundfile>=0.12.1

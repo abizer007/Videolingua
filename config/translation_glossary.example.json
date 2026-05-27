@@ -1,0 +1,18 @@
+{
+  "domain": "vidiolingua-techgium",
+  "terms": [
+    {
+      "source": "Vidiolingua",
+      "preserve": true,
+      "pronunciation_hint": "vi-dee-oh-ling-gwa"
+    },
+    {
+      "source": "Techgium",
+      "preserve": true
+    },
+    {
+      "source": "NMIMS",
+      "preserve": true
+    }
+  ]
+}

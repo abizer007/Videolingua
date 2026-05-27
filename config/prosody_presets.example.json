@@ -1,0 +1,126 @@
+{
+  "defaults": {
+    "VIDIOLINGUA_ENABLE_PROSODY_ENGINE": "true",
+    "VIDIOLINGUA_PROSODY_PRESET": "balanced",
+    "VIDIOLINGUA_ENABLE_HUBERT_PROSODY": "true",
+    "VIDIOLINGUA_HUBERT_REQUIRED_FOR_PROSODY_VALIDATION": "true",
+    "VIDIOLINGUA_HUBERT_FAILS_MAIN_PIPELINE": "false",
+    "VIDIOLINGUA_PROSODY_FAIL_ON_ERROR": "false"
+  },
+  "presets": {
+    "balanced": {
+      "xtts": {
+        "temperature": 0.52,
+        "repetition_penalty": 8.5,
+        "max_chars": 180,
+        "crossfade_ms": 25,
+        "punctuation_aware_chunking": true
+      },
+      "sarvam": {
+        "pace": 1.0,
+        "temperature": 0.45,
+        "speaker": "shubh"
+      },
+      "hubert": {
+        "use_hubert_adapter": true,
+        "min_confidence": "low",
+        "scoring_weight": 0.35
+      }
+    },
+    "expressive": {
+      "xtts": {
+        "temperature": 0.62,
+        "repetition_penalty": 8.0,
+        "max_chars": 160,
+        "crossfade_ms": 35,
+        "punctuation_aware_chunking": true
+      },
+      "sarvam": {
+        "pace": 0.95,
+        "temperature": 0.55,
+        "speaker": "shubh"
+      },
+      "hubert": {
+        "use_hubert_adapter": true,
+        "min_confidence": "low",
+        "scoring_weight": 0.45
+      }
+    },
+    "broadcast": {
+      "xtts": {
+        "temperature": 0.48,
+        "repetition_penalty": 8.8,
+        "max_chars": 190,
+        "crossfade_ms": 20,
+        "punctuation_aware_chunking": true
+      },
+      "sarvam": {
+        "pace": 0.98,
+        "temperature": 0.4,
+        "speaker": "shubh"
+      },
+      "hubert": {
+        "use_hubert_adapter": true,
+        "min_confidence": "low",
+        "scoring_weight": 0.35
+      }
+    },
+    "fast_sync": {
+      "xtts": {
+        "temperature": 0.5,
+        "repetition_penalty": 8.5,
+        "max_chars": 150,
+        "crossfade_ms": 15,
+        "punctuation_aware_chunking": true
+      },
+      "sarvam": {
+        "pace": 1.12,
+        "temperature": 0.42,
+        "speaker": "shubh"
+      },
+      "hubert": {
+        "use_hubert_adapter": true,
+        "min_confidence": "low",
+        "scoring_weight": 0.3
+      }
+    },
+    "calm": {
+      "xtts": {
+        "temperature": 0.45,
+        "repetition_penalty": 8.8,
+        "max_chars": 190,
+        "crossfade_ms": 30,
+        "punctuation_aware_chunking": true
+      },
+      "sarvam": {
+        "pace": 0.9,
+        "temperature": 0.35,
+        "speaker": "shubh"
+      },
+      "hubert": {
+        "use_hubert_adapter": true,
+        "min_confidence": "low",
+        "scoring_weight": 0.3
+      }
+    },
+    "presentation": {
+      "xtts": {
+        "temperature": 0.5,
+        "repetition_penalty": 8.7,
+        "max_chars": 175,
+        "crossfade_ms": 25,
+        "punctuation_aware_chunking": true
+      },
+      "sarvam": {
+        "pace": 0.96,
+        "temperature": 0.4,
+        "speaker": "shubh"
+      },
+      "hubert": {
+        "use_hubert_adapter": true,
+        "min_confidence": "low",
+        "scoring_weight": 0.35
+      }
+    }
+  }
+}

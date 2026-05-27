@@ -1,0 +1,14 @@
+{
+  "video_file": "D:\\Vidiolingua\\outputs\\kannada_sarvam_practical_test\\asr\\input\\Vidiolingua_Test_Official.mp4",
+  "segments": [
+    {
+      "start": 3.05,
+      "end": 30.68,
+      "text": "Kia ora. I'm Abilzer Masavi, a third-year computer science student at Mukesh Patel School of Technology Management and Engineering, NMIMS Mumbai. I'm excited about the opportunity to join the Education New Zealand's three-week virtual internship this July. Why this internship? Well, with a background in FinTech and a strong curiosity to explore its global applications, I am eager to gain hands-on experience with New Zealand's dynamic business environment, collaborating in diverse",
+      "speaker": null,
+      "words": []
+    }
+  ],
+  "language": "en",
+  "language_confidence": 0.0
+}

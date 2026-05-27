@@ -1,0 +1,7 @@
+# Compatibility notice
+#
+# VidioLingua intentionally uses stage-specific virtual environments. Do not
+# install this file into the root Python 3.13 environment for the full ML stack.
+# Use the requirements-*.txt files and scripts/setup_*_env.ps1 instead.
+
+-r requirements-api.txt

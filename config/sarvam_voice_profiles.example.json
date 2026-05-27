@@ -1,0 +1,62 @@
+{
+  "kn": {
+    "masculine_voice_fit": "shubh",
+    "feminine_voice_fit": "shubh",
+    "neutral": "shubh",
+    "unknown": "shubh"
+  },
+  "hi": {
+    "masculine_voice_fit": "shubh",
+    "feminine_voice_fit": "shubh",
+    "neutral": "shubh",
+    "unknown": "shubh"
+  },
+  "ta": {
+    "masculine_voice_fit": "shubh",
+    "feminine_voice_fit": "shubh",
+    "neutral": "shubh",
+    "unknown": "shubh"
+  },
+  "te": {
+    "masculine_voice_fit": "shubh",
+    "feminine_voice_fit": "shubh",
+    "neutral": "shubh",
+    "unknown": "shubh"
+  },
+  "bn": {
+    "masculine_voice_fit": "shubh",
+    "feminine_voice_fit": "shubh",
+    "neutral": "shubh",
+    "unknown": "shubh"
+  },
+  "ml": {
+    "masculine_voice_fit": "shubh",
+    "feminine_voice_fit": "shubh",
+    "neutral": "shubh",
+    "unknown": "shubh"
+  },
+  "mr": {
+    "masculine_voice_fit": "shubh",
+    "feminine_voice_fit": "shubh",
+    "neutral": "shubh",
+    "unknown": "shubh"
+  },
+  "gu": {
+    "masculine_voice_fit": "shubh",
+    "feminine_voice_fit": "shubh",
+    "neutral": "shubh",
+    "unknown": "shubh"
+  },
+  "pa": {
+    "masculine_voice_fit": "shubh",
+    "feminine_voice_fit": "shubh",
+    "neutral": "shubh",
+    "unknown": "shubh"
+  },
+  "or": {
+    "masculine_voice_fit": "shubh",
+    "feminine_voice_fit": "shubh",
+    "neutral": "shubh",
+    "unknown": "shubh"
+  }
+}

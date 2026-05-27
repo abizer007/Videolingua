@@ -1,0 +1,26 @@
+flowchart LR
+  Source["input_video.mp4"] --> Manifest["job_manifest.json"]
+  Source --> ASR["asr/output/*_transcription.json"]
+  ASR --> Translation["translation/output/*_transcription_LANG.json"]
+  Translation --> QA["translation_qa_report.json"]
+  Translation --> Linguistic["linguistic_integrity_report.json"]
+  Translation --> ProsodyPlan["prosody/tts_prosody_plan.json"]
+  Source --> ProsodySource["prosody/source_prosody_profile.json"]
+  ProsodySource --> Hubert["prosody/source_hubert_features/hubert_features.json"]
+  ASR --> Speaker["speaker_analysis/* reports\nvoice_assignment_plan.json"]
+  Translation --> TTS["tts/output/*.wav"]
+  TTS --> Phonetic["phonetic_resolution_report.json"]
+  TTS --> ProsodyValidation["prosody/prosody_validation_report.json\nhubert_prosody_report.json"]
+  TTS --> Final["results/*_dubbed_LANG.mp4"]
+  Final --> PipelineResult["pipeline_result.json"]
+  PipelineResult --> Metrics["evaluation/metrics_report.json"]
+  Final --> Compliance["compliance/compliance_passport.json\nprovenance_manifest.json\nfingerprint_report.json\naudit_ledger.jsonl"]
+  Final --> Export["outputs/multilingual_exports/*\nmetadata/multilingual_manifest.json"]
+  Manifest --> ASR
+  Manifest --> Translation
+  Manifest --> TTS
+  Manifest --> Final
+  Manifest --> Metrics
+  Manifest --> Compliance
+  Manifest --> PipelineResult
+
