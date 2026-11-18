@@ -1,4 +1,4 @@
-# VideoLingua - AI Video Translation, Dubbing, QA, and Export
+# VideoLingua - AI Video Translation, Dubbing, QA, and Expor
 
 VideoLingua is an auditable AI video localization pipeline for translating,
 voicing, validating, and packaging localized video outputs. It combines a
